@@ -113,8 +113,8 @@ def api_edit():
         hex_=ed.get("color","#000000").lstrip("#")
         cr=tuple(int(hex_[i:i+2],16)/255 for i in (0,2,4))
         fk=font_kw(ed.get("font","Sarabun"))
-        page.insert_text(fitz.Point(ed["x0"],ed["y1"]),
-                         ed["new_text"],fontsize=float(ed.get("fs",12)),color=cr,**fk)
+                         new_text = ed.get("new_text") or ed.get("newText","")
+        page.insert_text(fitz.Point(ed["x0"], ed["y1"]), new_text, fontsize=float(ed.get("fs",12)),color=cr,**fk)
     return pdf_response(doc,"edited.pdf")
 
 # ── Search ───────────────────────────────────────────────────
