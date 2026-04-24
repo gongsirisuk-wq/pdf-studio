@@ -9,13 +9,25 @@ CORS(app)
 # ── Thai font (download Sarabun on startup) ─────────────────
 THAI_FONT = None
 FONT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Sarabun-Regular.ttf")
-FONT_URL = "https://github.com/google/fonts/raw/main/ofl/sarabun/Sarabun-Regular.ttf"
+
+FONT_URLS = [
+    "https://cdn.jsdelivr.net/npm/@fontsource/sarabun@5/files/sarabun-thai-400-normal.woff2",
+    "https://fonts.gstatic.com/s/sarabun/v15/DtVmJx26TKEr37c9YOZqulwm6gDXvwE.woff2",
+]
 
 if not os.path.exists(FONT_PATH):
     try:
         import urllib.request
-        urllib.request.urlretrieve(FONT_URL, FONT_PATH)
-        print(f"[PDF Studio] Downloaded Sarabun font")
+        for url in FONT_URLS:
+            try:
+                urllib.request.urlretrieve(url, FONT_PATH)
+                if os.path.getsize(FONT_PATH) > 10000:
+                    print(f"[PDF Studio] Downloaded font from {url}")
+                    break
+                else:
+                    os.remove(FONT_PATH)
+            except:
+                continue
     except Exception as e:
         print(f"[PDF Studio] Font download failed: {e}")
 
