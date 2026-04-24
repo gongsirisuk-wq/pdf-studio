@@ -453,7 +453,7 @@ let tT;
 function toast(m,t='ok'){const e=document.getElementById('toast');e.textContent=(t==='ok'?'✅ ':t==='err'?'❌ ':'⚠️ ')+m;e.className='toast show '+t;clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('show'),4000);}
 function showLoad(m='กำลังประมวลผล...'){document.getElementById('load-msg').textContent=m;document.getElementById('loading').classList.add('show');}
 function hideLoad(){document.getElementById('loading').classList.remove('show');}
-async function b64File(f){const ab=await f.arrayBuffer();const bytes=new Uint8Array(ab);let binary='';const chunkSize=8192;for(let i=0;i<bytes.length;i+=chunkSize){binary+=String.fromCharCode(...bytes.subarray(i,i+chunkSize));}return btoa(binary);}
+async function b64File(f){const ab=await f.arrayBuffer();return btoa(String.fromCharCode(...new Uint8Array(ab)));}
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
 function closeDlg(id){document.getElementById(id).style.display='none';}
 function openDlg(id){document.getElementById(id).style.display='flex';}
@@ -724,7 +724,9 @@ function placeTxt(p,sc){
   const fs=+document.getElementById('tx-size').value;
   const color=document.getElementById('tx-color').value;
   const font=document.getElementById('tx-font').value;
-  const ann={x:p.x/sc,y:p.y/sc,text,fs,color,font,page:curPage,px:p.x,py:p.y};
+  // y stored as PDF pt where text TOP appears (click position)
+  // Add fs to get baseline position for backend
+  const ann={x:p.x/sc,y:(p.y+fs*sc)/sc,text,fs,color,font,page:curPage,px:p.x,py:p.y};
   if(!txtAnns[curPage])txtAnns[curPage]=[];
   txtAnns[curPage].push(ann);
   addTxtOverlay(document.getElementById('stage'),ann,sc);
