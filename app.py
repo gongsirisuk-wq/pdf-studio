@@ -9,6 +9,7 @@ CORS(app)
 # ── Thai font ────────────────────────────────────────────────
 THAI_FONT = None
 for c in [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     "/usr/share/fonts/truetype/tlwg/Garuda.ttf",
     "/usr/share/fonts/opentype/tlwg/Loma.otf",
     "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
