@@ -453,7 +453,7 @@ let tT;
 function toast(m,t='ok'){const e=document.getElementById('toast');e.textContent=(t==='ok'?'✅ ':t==='err'?'❌ ':'⚠️ ')+m;e.className='toast show '+t;clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('show'),4000);}
 function showLoad(m='กำลังประมวลผล...'){document.getElementById('load-msg').textContent=m;document.getElementById('loading').classList.add('show');}
 function hideLoad(){document.getElementById('loading').classList.remove('show');}
-async function b64File(f){const ab=await f.arrayBuffer();return btoa(String.fromCharCode(...new Uint8Array(ab)));}
+async function b64File(f){const ab=await f.arrayBuffer();const bytes=new Uint8Array(ab);let binary='';const chunkSize=8192;for(let i=0;i<bytes.length;i+=chunkSize){binary+=String.fromCharCode(...bytes.subarray(i,i+chunkSize));}return btoa(binary);}
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
 function closeDlg(id){document.getElementById(id).style.display='none';}
 function openDlg(id){document.getElementById(id).style.display='flex';}
