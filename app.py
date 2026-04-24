@@ -18,11 +18,15 @@ def insert_thai_text(page, point, text, fontsize=12, color=(0,0,0), fontname="Sa
     r, g, b = color
     hex_c = "#{:02x}{:02x}{:02x}".format(int(r*255), int(g*255), int(b*255))
     ff = "Sarabun, sans-serif" if fontname.startswith("Sarabun") else fontname
-    w = max(len(text) * fontsize * 1.0 + 100, 200)
-    rect = fitz.Rect(point.x, point.y - fontsize * 1.4,
-                     point.x + w, point.y + fontsize * 0.4)
-    html = (f'<p style="font-family:{ff};font-size:{fontsize}px;'
-            f'color:{hex_c};margin:0;padding:0;white-space:nowrap;">'
+    # point.y is baseline in PDF coords (Y-up)
+    # Give generous rect so text fits
+    w = max(len(text) * fontsize + 200, 300)
+    h = fontsize * 2.5
+    # Place rect so text baseline aligns with point.y
+    rect = fitz.Rect(point.x, point.y - fontsize * 1.8,
+                     point.x + w, point.y + fontsize * 0.8)
+    html = (f'<p style="font-family:{ff};font-size:{fontsize}pt;'
+            f'color:{hex_c};margin:0;padding:0;white-space:nowrap;line-height:1;">'
             f'{text}</p>')
     page.insert_htmlbox(rect, html)
 
