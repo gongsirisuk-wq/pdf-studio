@@ -453,16 +453,7 @@ let tT;
 function toast(m,t='ok'){const e=document.getElementById('toast');e.textContent=(t==='ok'?'✅ ':t==='err'?'❌ ':'⚠️ ')+m;e.className='toast show '+t;clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('show'),4000);}
 function showLoad(m='กำลังประมวลผล...'){document.getElementById('load-msg').textContent=m;document.getElementById('loading').classList.add('show');}
 function hideLoad(){document.getElementById('loading').classList.remove('show');}
-async function b64File(f){
-  const ab=await f.arrayBuffer();
-  const bytes=new Uint8Array(ab);
-  let binary='';
-  const chunkSize=8192;
-  for(let i=0;i<bytes.length;i+=chunkSize){
-    binary+=String.fromCharCode(...bytes.subarray(i,i+chunkSize));
-  }
-  return btoa(binary);
-}
+async function b64File(f){const ab=await f.arrayBuffer();return btoa(String.fromCharCode(...new Uint8Array(ab)));}
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);}
 function closeDlg(id){document.getElementById(id).style.display='none';}
 function openDlg(id){document.getElementById(id).style.display='flex';}
@@ -664,9 +655,9 @@ function stageMouseUp(e){
   if(!isDragging){
     // single click tools
     const p=getStagePos(e); const sc=SCALES[scaleIdx];
-    if(currentTool==='addtext' && e.target===document.getElementById('main-img')) placeTxt(p,sc);
-    else if(currentTool==='sign' && e.target===document.getElementById('main-img')) placeSig(p,sc);
-    else if(currentTool==='image'&&pendingImg && e.target===document.getElementById('main-img')) placeImg(p,sc);
+    if(currentTool==='addtext') placeTxt(p,sc);
+    else if(currentTool==='sign') placeSig(p,sc);
+    else if(currentTool==='image'&&pendingImg) placeImg(p,sc);
     isDragging=false; return;
   }
   isDragging=false;
@@ -1042,7 +1033,16 @@ async function saveFile(){
 }
 
 // ── UTILS ─────────────────────────────────────────────────────
-async function blobToB64(blob){const ab=await blob.arrayBuffer();return btoa(String.fromCharCode(...new Uint8Array(ab)));}
+async function blobToB64(blob){
+  const ab=await blob.arrayBuffer();
+  const bytes=new Uint8Array(ab);
+  let binary='';
+  const chunkSize=8192;
+  for(let i=0;i<bytes.length;i+=chunkSize){
+    binary+=String.fromCharCode(...bytes.subarray(i,i+chunkSize));
+  }
+  return btoa(binary);
+}
 async function postBlob(path,data){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!r.ok)throw new Error(await r.text());return r.blob();}
 </script>
 </body>
