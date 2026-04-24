@@ -664,9 +664,9 @@ function stageMouseUp(e){
   if(!isDragging){
     // single click tools
     const p=getStagePos(e); const sc=SCALES[scaleIdx];
-    if(currentTool==='addtext') placeTxt(p,sc);
-    else if(currentTool==='sign') placeSig(p,sc);
-    else if(currentTool==='image'&&pendingImg) placeImg(p,sc);
+    if(currentTool==='addtext' && e.target===document.getElementById('main-img')) placeTxt(p,sc);
+    else if(currentTool==='sign' && e.target===document.getElementById('main-img')) placeSig(p,sc);
+    else if(currentTool==='image'&&pendingImg && e.target===document.getElementById('main-img')) placeImg(p,sc);
     isDragging=false; return;
   }
   isDragging=false;
